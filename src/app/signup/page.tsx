@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { authService } from "@/services/apiService";
 
 export default function SignUp() {
   const router = useRouter();
@@ -11,8 +12,11 @@ export default function SignUp() {
     email: "",
     password: "",
     confirmPassword: "",
+    username: "", // Added for API compatibility
+    phone: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,25 +26,69 @@ export default function SignUp() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     // Basic validation
     if (!formData.name || !formData.email || !formData.password) {
       setError("All fields are required");
+      setIsLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
+      setIsLoading(false);
       return;
     }
 
-    // TODO: Add actual signup logic with API call
+    try {
+      // Set the username to be the same as name if not specifically provided
+      // The API requires a username
+      const username = formData.username || formData.name;
 
-    // For now, just navigate to room page after "successful" signup
-    router.push("/room");
+      // Prepare the user data for registration
+      const userData = {
+        email: formData.email,
+        username: username,
+        password: formData.password,
+        phone: formData.phone || undefined,
+        role_id: "PLAYER", // Updated to match the backend's expected format
+      };
+
+      // Call register API
+      console.log("Sending registration data:", userData);
+      const result = await authService.register(userData);
+      console.log("Registration result:", result);
+
+      if (result.success) {
+        // After successful registration, log the user in
+        const loginResult = await authService.login(
+          formData.email,
+          formData.password
+        );
+
+        if (loginResult.success) {
+          // Navigate to room page after successful login
+          router.push("/room");
+        } else {
+          // If login fails after registration, redirect to login page
+          router.push("/signin");
+        }
+      } else {
+        setError(result.error || "Registration failed. Please try again.");
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -67,6 +115,7 @@ export default function SignUp() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="John Doe"
+              disabled={isLoading}
             />
           </div>
 
@@ -82,6 +131,23 @@ export default function SignUp() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="john@example.com"
+              disabled={isLoading}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block mb-1 text-sm font-medium">
+              Phone (Optional)
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
+              placeholder="Your phone number"
+              disabled={isLoading}
             />
           </div>
 
@@ -100,6 +166,7 @@ export default function SignUp() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="••••••••"
+              disabled={isLoading}
             />
           </div>
 
@@ -118,14 +185,18 @@ export default function SignUp() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="••••••••"
+              disabled={isLoading}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 transition-colors p-3 rounded-lg font-medium mt-6"
+            className={`w-full bg-blue-500 hover:bg-blue-600 transition-colors p-3 rounded-lg font-medium mt-6 ${
+              isLoading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            disabled={isLoading}
           >
-            Create Account
+            {isLoading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 

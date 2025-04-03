@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { authService } from "@/services/apiService";
 
 export default function SignIn() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function SignIn() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,20 +22,37 @@ export default function SignIn() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     // Basic validation
     if (!formData.email || !formData.password) {
       setError("All fields are required");
+      setIsLoading(false);
       return;
     }
 
-    // TODO: Add actual signin logic with API call
+    try {
+      // Call login API
+      const result = await authService.login(formData.email, formData.password);
 
-    // For now, just navigate to room page after "successful" signin
-    router.push("/room");
+      if (result.success) {
+        // Navigate to room page after successful login
+        router.push("/room");
+      } else {
+        setError(result.error || "Login failed. Please try again.");
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,6 +79,7 @@ export default function SignIn() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="john@example.com"
+              disabled={isLoading}
             />
           </div>
 
@@ -78,6 +98,7 @@ export default function SignIn() {
               onChange={handleChange}
               className="w-full p-3 bg-white/20 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-white"
               placeholder="••••••••"
+              disabled={isLoading}
             />
           </div>
 
@@ -99,9 +120,12 @@ export default function SignIn() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 transition-colors p-3 rounded-lg font-medium mt-6"
+            className={`w-full bg-blue-500 hover:bg-blue-600 transition-colors p-3 rounded-lg font-medium mt-6 ${
+              isLoading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            disabled={isLoading}
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
