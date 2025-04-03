@@ -1,102 +1,90 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-purple-900 text-white p-4">
+      <main className="max-w-4xl w-full flex flex-col items-center text-center gap-8">
+        {/* Logo and Title */}
+        <div className="mb-6">
+          <h1 className="text-5xl font-bold tracking-tight mb-2">VirtuCards</h1>
+          <p className="text-xl text-blue-200">
+            The Ultimate Virtual Card Game Experience
+          </p>
+        </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        {/* Project Description */}
+        <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl max-w-2xl mb-8">
+          <p className="text-lg mb-4">
+            Welcome to VirtuCards - where traditional card games meet modern
+            technology! Create or join rooms, play with friends from anywhere in
+            the world, and experience your favorite card games in a whole new
+            way.
+          </p>
+          <p className="text-blue-200">
+            Real-time gameplay • Custom rooms • Multiple game modes
+          </p>
+        </div>
+
+        {/* Auth Options */}
+        <div className="w-full max-w-md flex flex-col gap-4">
+          {/* Sign Up */}
+          <Link
+            href="/signup"
+            className="bg-blue-500 hover:bg-blue-600 transition-colors p-4 rounded-lg font-medium flex items-center justify-center gap-2"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+              <path d="M16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+            </svg>
+            Sign Up
+          </Link>
+
+          {/* Sign In */}
+          <Link
+            href="/signin"
+            className="bg-white/20 hover:bg-white/30 transition-colors p-4 rounded-lg font-medium flex items-center justify-center gap-2"
           >
-            Read our docs
-          </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Sign In
+          </Link>
+
+          {/* Play as Guest */}
+          <Link
+            href="/room"
+            className="bg-purple-500 hover:bg-purple-600 transition-colors p-4 rounded-lg font-medium flex items-center justify-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-2.328.996.002 1.069c0 .54-.18 1.070-.267 1.645-.087.573-.149 1.186-.149 1.8 0 .005 0 .01.001.015A12 12 0 0110 17a1 1 0 01-1 1h.01a1 1 0 01-.769-.386 11.476 11.476 0 01-2.93-4.358 1 1 0 01.536-1.455l2.058-.882-.001-.775a1 1 0 01.32-.748l3.999-4a1 1 0 01.394-.24z" />
+              <path d="M2 9.654a1 1 0 01.769.386 12.026 12.026 0 013.6 4.358 1 1 0 01-.5 1.406l-1.79.767a1 1 0 00-.53 1.313 5.005 5.005 0 005.054 3.113 1 1 0 011.045.9 5.006 5.006 0 009.199-3.113 1 1 0 00-.53-1.313l-1.788-.77a1 1 0 01-.499-1.405 12.025 12.025 0 013.595-4.353 1 1 0 011.082.163 5.005 5.005 0 00-6.562-7.518A5.006 5.006 0 0010 7.839a5.006 5.006 0 00-8 1.815z" />
+            </svg>
+            Play as Guest
+          </Link>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="mt-16 text-sm text-blue-200">
+        <p>© {new Date().getFullYear()} VirtuCards. All rights reserved.</p>
       </footer>
     </div>
   );
